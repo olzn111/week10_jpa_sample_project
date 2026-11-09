@@ -111,3 +111,6 @@ gradlew.bat bootRun
  ```
 
  응답과 실제 DB 데이터를 비교하고 콘솔의 Hibernate INSERT/SELECT/UPDATE/DELETE를 확인합니다.
+
+
+
