@@ -18,6 +18,10 @@ public class BookService {
         this.repository = repository;
     }
 
+    /* Q7. save()를 호출하면 새로운 데이터 등록과 기존 데이터 수정이 어떻게 처리되는가?
+     * 전달받은 엔티티의 @Id 값이 null이면 새로운 엔티티로 인식하여 INSERT 쿼리를 실행하고,
+     * @Id 값이 이미 존재하면 DB 조회를 거쳐 기존 데이터로 인식하여 UPDATE 쿼리를 실행한다. */
+
     public BookResponse create(BookRequest request) {
         Book saved = repository.save(new Book(request)); // INSERT
         return BookResponse.from(saved);
@@ -30,6 +34,10 @@ public class BookService {
     public BookResponse findById(Long id) {
         return BookResponse.from(findEntity(id));
     }
+    /*Q8. @Transactional과 Dirty Checking은 어떤 관계가 있는가?
+     @Transactional이 적용된 메서드 내에서 조회된 엔티티는 영속성을 띠고
+     메서드가 종료될 떄 최초 상태와 비교하여 변경 사항을 감지하고,
+     repository.save()를 호출하지 않아도 자동으로 데이터베이스에 업데이트를 반영한다.*/
 
     public BookResponse update(Long id, BookRequest request) {
         Book book = findEntity(id);
