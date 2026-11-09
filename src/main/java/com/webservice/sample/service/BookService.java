@@ -7,6 +7,7 @@ import com.webservice.sample.repository.BookRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,11 +40,12 @@ public class BookService {
      메서드가 종료될 떄 최초 상태와 비교하여 변경 사항을 감지하고,
      repository.save()를 호출하지 않아도 자동으로 데이터베이스에 업데이트를 반영한다.*/
 
+    @Transactional
     public BookResponse update(Long id, BookRequest request) {
         Book book = findEntity(id);
         book.update(request);
-        // Week 09: explicitly save (Week 10 changes this to Dirty Checking).
-        return BookResponse.from(repository.save(book));
+        book.update(request); // Week 09: explicitly save (Week 10 changes this to Dirty Checking).
+        return BookResponse.from(book);
     }
 
     public void delete(Long id) {
