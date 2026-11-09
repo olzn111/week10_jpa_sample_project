@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.net.URI;
 import java.util.List;
 
@@ -22,7 +24,9 @@ import java.util.List;
 public class BookController {
     private final BookService service;
 
-    public BookController(BookService service) { this.service = service; }
+    public BookController(BookService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<BookResponse> create(@Valid @RequestBody BookRequest request) {
@@ -31,10 +35,14 @@ public class BookController {
     }
 
     @GetMapping
-    public List<BookResponse> findAll() { return service.findAll(); }
+    public List<BookResponse> findAll() {
+        return service.findAll();
+    }
 
     @GetMapping("/{id}")
-    public BookResponse findById(@PathVariable Long id) { return service.findById(id); }
+    public BookResponse findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
     @PutMapping("/{id}")
     public BookResponse update(@PathVariable Long id, @Valid @RequestBody BookRequest request) {
@@ -45,5 +53,22 @@ public class BookController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search/category")
+    public List<BookResponse> searchByCategory(@RequestParam String category) {
+        return service.findByCategory(category);
+    }
+
+    @GetMapping("/search/price")
+    public List<BookResponse> searchByPriceRange(
+            @RequestParam Integer minPrice,
+            @RequestParam Integer maxPrice) {
+        return service.findByPriceBetween(minPrice, maxPrice);
+    }
+
+    @GetMapping("/search/author")
+    public List<BookResponse> searchByAuthorOrderByPriceDesc(@RequestParam String author) {
+        return service.findByAuthorOrderByPriceDesc(author);
     }
 }

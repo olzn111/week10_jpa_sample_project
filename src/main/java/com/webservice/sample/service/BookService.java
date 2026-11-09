@@ -34,7 +34,7 @@ public class BookService {
     public BookResponse findById(Long id) {
         return BookResponse.from(findEntity(id));
     }
-    /*Q8. @Transactional과 Dirty Checking은 어떤 관계가 있는가?
+    /* Q8. @Transactional과 Dirty Checking은 어떤 관계가 있는가?
      @Transactional이 적용된 메서드 내에서 조회된 엔티티는 영속성을 띠고
      메서드가 종료될 떄 최초 상태와 비교하여 변경 사항을 감지하고,
      repository.save()를 호출하지 않아도 자동으로 데이터베이스에 업데이트를 반영한다.*/
@@ -57,5 +57,24 @@ public class BookService {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Book not found: " + id));
+    }
+
+    public List<BookResponse> findByCategory(String category) {
+        return repository.findByCategory(category).stream()
+                .map(BookResponse::from)
+                .toList();
+
+    }
+
+    public List<BookResponse> findByPriceBetween(Integer minPrice, Integer maxPrice) {
+        return repository.findByPriceBetween(minPrice, maxPrice).stream()
+                .map(BookResponse::from)
+                .toList();
+    }
+
+    public List<BookResponse> findByAuthorOrderByPriceDesc(String author) {
+        return repository.findByAuthorOrderByPriceDesc(author).stream()
+                .map(BookResponse::from)
+                .toList();
     }
 }
